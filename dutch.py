@@ -29,10 +29,10 @@ class Dutch:
             first = a // 100
             return Dutch.number(first) + "honderd" + Dutch.number(a - first * 100)
         if a < 2000:
-            return "duizend" + Dutch.number(a - 1000)
+            return Dutch.join("duizend", Dutch.number(a - 1000))
         if a < 10 ** 6:
             first = a // 1000
-            return Dutch.number(first) + "duizend" + Dutch.number(a - first * 1000)
+            return Dutch.join(Dutch.number(first) + "duizend", Dutch.number(a - first * 1000))
         else:
             rounded = a // 10 ** 6
             return Dutch.join(Dutch.dutch_big(rounded, 2), Dutch.number(a - rounded * 10 ** 6))
@@ -84,5 +84,9 @@ class TestMethods(unittest.TestCase):
                          Dutch.number(10 ** 63))
         print(Dutch.number(111232123561))
         self.assertEqual(
-            "honderdelf miljard tweehonderdtweeëndertig miljoen honderddrieëntwintigduizendvijfhonderdéénenzestig",
+            "honderdelf miljard tweehonderdtweeëndertig miljoen honderddrieëntwintigduizend vijfhonderdéénenzestig",
             Dutch.number(111232123561))
+
+
+        print(Dutch.number(111232123561234098354098309548093343432809))
+

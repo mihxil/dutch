@@ -9,14 +9,39 @@ class Dutch:
     letters_big_pre = ["mil", "bil", "tril", "quadril", "quintil", "sextil", "septil", "octil", "nonil", "decil"]
     letters_big_post = ["joen", "jard"]
 
+
     @staticmethod
     def number(a):
+        """
+        Returns a number in dutch
+        :param a:
+        :return:
+        """
+        if isinstance(a, str):
+            a = float(a)
+        if isinstance(a, int) or a.is_integer():
+            if a == 0:
+                return "nul"
+            else:
+                return Dutch._number(a)
+        else:
+            result = Dutch.number(int(a)) + " komma"
+            if a < 0:
+                a *= -1
+            for c in str(a - int(a))[2:]:
+                result += " " + Dutch.number(int(c))
+            return result
+
+    @staticmethod
+    def _number(a):
+        if a < 0:
+            return "min " + Dutch._number(-1 * a)
         if a < 10:
             return Dutch.letters_tien[a]
         if a < 15:
             return Dutch.letters_twintig[a - 10]
         if a < 100:
-            begin = Dutch.number(a % 10)
+            begin = Dutch._number(a % 10)
             if len(begin) > 0:
                 if begin[-1] in 'aeio':
                     begin += "ën"
@@ -24,25 +49,25 @@ class Dutch:
                     begin += "en"
             return begin + Dutch.letters_tig[(a - a % 10) // 10]
         if a < 200:
-            return "honderd" + Dutch.number(a - 100)
+            return "honderd" + Dutch._number(a - 100)
         if a < 1000:
             first = a // 100
-            return Dutch.number(first) + "honderd" + Dutch.number(a - first * 100)
+            return Dutch._number(first) + "honderd" + Dutch._number(a - first * 100)
         if a < 2000:
-            return Dutch.join("duizend", Dutch.number(a - 1000))
+            return Dutch.join("duizend", Dutch._number(a - 1000))
         if a < 10 ** 6:
             first = a // 1000
-            return Dutch.join(Dutch.number(first) + "duizend", Dutch.number(a - first * 1000))
+            return Dutch.join(Dutch._number(first) + "duizend", Dutch._number(a - first * 1000))
         else:
             rounded = a // 10 ** 6
-            return Dutch.join(Dutch.dutch_big(rounded, 2), Dutch.number(a - rounded * 10 ** 6))
+            return Dutch.join(Dutch.dutch_big(rounded, 2), Dutch._number(a - rounded * 10 ** 6))
 
     @staticmethod
     def dutch_big(rounded, mil_factor):
         if rounded == 0:
             return ""
         if rounded < 1000:
-            return Dutch.join(Dutch.number(rounded),
+            return Dutch.join(Dutch._number(rounded),
                               Dutch.letters_big_pre[(mil_factor - 2) // 2] + Dutch.letters_big_post[
                                   (mil_factor - 2) % 2])
         else:
@@ -66,12 +91,14 @@ import unittest
 
 class TestMethods(unittest.TestCase):
     def testSmall(self):
+        self.assertEqual("min tien", Dutch.number(-10))
+        self.assertEqual("nul", Dutch.number(0))
         self.assertEqual("één", Dutch.number(1))
         self.assertEqual("twee", Dutch.number(2))
         self.assertEqual("drieëntwintig", Dutch.number(23))
 
     def testBigger(self):
-        self.assertEqual("honderddrieëntwintigduizendvijfhonderdéénenzestig", Dutch.number(123561))
+        self.assertEqual("honderddrieëntwintigduizend vijfhonderdéénenzestig", Dutch.number(123561))
 
     def testBig(self):
         self.assertEquals("één miljoen", Dutch.dutch_big(1, 2))
@@ -82,7 +109,7 @@ class TestMethods(unittest.TestCase):
     def testBiggerNumber(self):
         self.assertEqual("één deciljard",
                          Dutch.number(10 ** 63))
-        print(Dutch.number(111232123561))
+        print(Dutch._number(111232123561))
         self.assertEqual(
             "honderdelf miljard tweehonderdtweeëndertig miljoen honderddrieëntwintigduizend vijfhonderdéénenzestig",
             Dutch.number(111232123561))

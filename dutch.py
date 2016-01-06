@@ -19,16 +19,17 @@ class Dutch:
         """
         if isinstance(a, str):
             a = float(a)
+
         if isinstance(a, int) or a.is_integer():
             if a == 0:
                 return "nul"
             else:
-                return Dutch._number(a)
+                return Dutch._number(int(a))
         else:
             result = Dutch.number(int(a)) + " komma"
             if a < 0:
                 a *= -1
-            for c in str(a - int(a))[2:]:
+            for c in str(a).split(".")[1]:
                 result += " " + Dutch.number(int(c))
             return result
 
@@ -116,4 +117,3 @@ class TestMethods(unittest.TestCase):
 
 
         print(Dutch.number(111232123561234098354098309548093343432809))
-

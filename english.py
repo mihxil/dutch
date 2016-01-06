@@ -4,10 +4,10 @@ __author__ = 'mihxil'
 class English:
     letters_tien = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
     letters_twintig = ["ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen"]
-    letters_tig = ["", "ten", "twinty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty",
+    letters_tig = ["", "ten", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty",
                    "ninety"]
     letters_big_pre = ["mil", "bil", "tril", "quadril", "quintil", "sextil", "septil", "octil", "nonil", "decil"]
-    letters_big_post = ["joen", "jard"]
+    letters_big_post = ["lion", "liard"]
 
 
     @staticmethod
@@ -50,12 +50,12 @@ class English:
             return " hundred " + English._number(a - 100)
         if a < 1000:
             first = a // 100
-            return English._number(first) + "hundred " + English._number(a - first * 100)
+            return English._number(first) + " hundred " + English._number(a - first * 100)
         if a < 2000:
-            return English.join("thousand", English._number(a - 1000))
+            return English.join(" thousand", English._number(a - 1000))
         if a < 10 ** 6:
             first = a // 1000
-            return English.join(English._number(first) + "thousand", English._number(a - first * 1000))
+            return English.join(English._number(first) + " thousand", English._number(a - first * 1000))
         else:
             rounded = a // 10 ** 6
             return English.join(English.dutch_big(rounded, 2), English._number(a - rounded * 10 ** 6))

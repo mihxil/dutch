@@ -29,8 +29,8 @@ class Dutch:
             result = Dutch.number(int(a)) + " komma"
             if a < 0:
                 a *= -1
-            for c in str(a).split(".")[1]:
-                result += " " + Dutch.number(int(c))
+                for c in str(a).split(".")[1]:
+                    result += " " + Dutch.number(int(c))
             return result
 
     @staticmethod

@@ -41,6 +41,8 @@ class Dutch:
             return Dutch.letters_tien[a]
         if a < 15:
             return Dutch.letters_twintig[a - 10]
+        if a < 20:
+            return Dutch.letters_tien[a - 10] + "tien"
         if a < 100:
             begin = Dutch._number(a % 10)
             if len(begin) > 0:
@@ -97,6 +99,9 @@ class TestMethods(unittest.TestCase):
         self.assertEqual("één", Dutch.number(1))
         self.assertEqual("twee", Dutch.number(2))
         self.assertEqual("drieëntwintig", Dutch.number(23))
+        self.assertEqual("negentien", Dutch.number(19))
+        self.assertEqual("negentien", Dutch.number(19))
+        self.assertEqual("vijftien", Dutch.number(15))
 
     def testBigger(self):
         self.assertEqual("honderddrieëntwintigduizend vijfhonderdéénenzestig", Dutch.number(123561))
